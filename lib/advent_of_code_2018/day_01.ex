@@ -2,7 +2,8 @@ defmodule AdventOfCode2018.Day01 do
   def part1(args) do
     args
     |> String.split("\n")
-    |> Enum.reduce(0, fn el, acc -> String.to_integer(el) + acc end)
+    |> Enum.map(&String.to_integer/1)
+    |> Enum.sum
   end
 
   def part2(args) do
