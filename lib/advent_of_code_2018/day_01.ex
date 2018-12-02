@@ -7,25 +7,18 @@ defmodule AdventOfCode2018.Day01 do
   end
 
   def part2(args) do
-    list =
-      args
-      |> String.split("\n")
-      |> Enum.map(fn el -> String.to_integer(el) end)
+    args
+    |> String.split("\n")
+    |> Enum.map(&String.to_integer/1)
+    |> Stream.cycle()
+    |> Enum.reduce_while({0, MapSet.new([0])}, fn i, {current, seen} ->
+      frequency = current + i
 
-    frequency(list, [0], list)
-  end
-
-  defp frequency([], seen, list) do
-    frequency(list, seen, list)
-  end
-  
-  defp frequency([head | tail], seen, list) do
-    current = List.first(seen) + head
-
-    if Enum.member?(seen, current) do
-      current
-    else
-      frequency(tail, [current | seen], list)
-    end
+      if MapSet.member?(seen, frequency) do
+        {:halt, frequency}
+      else
+        {:cont, {frequency, MapSet.put(seen, frequency)}}
+      end
+    end)
   end
 end
