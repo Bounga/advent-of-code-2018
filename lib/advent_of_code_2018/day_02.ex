@@ -11,12 +11,12 @@ defmodule AdventOfCode2018.Day02 do
     |> Enum.reduce(%{}, fn el, acc -> Map.update(acc, el, 1, &(&1 + 1)) end)
   end
 
-  def find_twice_and_thrice(map) do
-    values = Map.values(map)
-    twice = if Enum.find_value(values, &(&1 == 2)), do: 1, else: 0
-    thrice = if Enum.find_value(values, &(&1 == 3)), do: 1, else: 0
-
-    {twice, thrice}
+  def find_twice_and_thrice(characters) do
+    Enum.reduce(characters, {0, 0}, fn
+      {_codepoint, 2}, {_twice, thrice} -> {1, thrice}
+      {_codepoint, 3}, {twice, _thrice} -> {twice, 1}
+      _, acc -> acc
+    end)
   end
 
   defp checksum(list) do
