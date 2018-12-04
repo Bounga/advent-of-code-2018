@@ -30,5 +30,39 @@ defmodule AdventOfCode2018.Day02 do
   end
 
   def part2(args) do
+    args
+    |> String.split("\n", trim: true)
+    |> find_closest()
+  end
+
+  defp find_closest([head | tail]) do
+    if closest = Enum.find_value(tail, &one_difference?(&1, head)) do
+      closest
+    else
+      find_closest(tail)
+    end
+  end
+
+  defp one_difference?(s1, s2) do
+    list1 = String.to_charlist(s1)
+    list2 = String.to_charlist(s2)
+
+    zipped =
+      list1
+      |> Enum.zip(list2)
+
+    zipped
+    |> Enum.count(fn {cp1, cp2} -> cp1 != cp2 end)
+    |> Kernel.==(1)
+    |> case do
+         false -> false
+         true -> zipped
+           |> Enum.reverse()
+           |> Enum.reduce([], fn
+           {cp1, cp2}, acc when cp1 == cp2 -> [cp1 | acc]
+           _, acc -> acc
+           end)
+           |> to_string()
+    end
   end
 end
