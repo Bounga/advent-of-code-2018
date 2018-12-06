@@ -7,7 +7,7 @@ defmodule AdventOfCode2018.Day04 do
       |> extract_logs()
 
     {guard_id, _} = most_asleep(logs)
-    minute = get_most_asleep_minutes(logs[guard_id])
+    {minute, _} = get_most_asleep_minute(logs[guard_id])
 
     minute * guard_id
   end
@@ -63,17 +63,37 @@ defmodule AdventOfCode2018.Day04 do
     |> Enum.max_by(fn {_, count} -> count end)
   end
 
-  defp get_most_asleep_minutes(sleeping_times) do
-    {min, _} =
+  defp get_most_asleep_minute(sleeping_times) do
+    {min, list} =
       sleeping_times
       |> Enum.map(&Enum.to_list/1)
       |> List.flatten()
       |> Enum.group_by(& &1)
-      |> Enum.max_by(fn {_, list} -> Enum.count(list) end)
+      |> Enum.max_by(
+        fn {id, list} -> Enum.count(list) end,
+        fn -> {nil, []} end
+      )
 
-    min
+    {min, Enum.count(list)}
   end
 
   def part2(args) do
+    {id, min} =
+      args
+      |> String.split("\n", trim: true)
+      |> Enum.sort()
+      |> extract_logs()
+      |> guard_with_most_asleep_minute()
+
+    id * min
+  end
+
+  defp guard_with_most_asleep_minute(logs) do
+    {id, {min, _}} =
+      logs
+      |> Enum.map(fn {id, ranges} -> {id, get_most_asleep_minute(ranges)} end)
+      |> Enum.max_by(fn {_, {_, times}} -> times end)
+
+    {id, min}
   end
 end
