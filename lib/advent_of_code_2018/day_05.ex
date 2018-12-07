@@ -21,5 +21,22 @@ defmodule AdventOfCode2018.Day05 do
   end
   
   def part2(args) do
+    string =
+      args
+      |> String.trim
+    
+    ?A..?Z
+    |> Enum.map(fn (letter) ->
+      remove_letter(string, letter)
+      |> kill_adjacent_opposites([])
+      |> String.length
+    end)
+    |> Enum.min()
+  end
+
+  defp remove_letter(string, letter) do
+    string
+    |> String.replace(List.to_string([letter]), "")
+    |> String.replace(List.to_string([letter + 32]), "")
   end
 end

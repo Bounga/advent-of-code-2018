@@ -5,10 +5,10 @@ defmodule Mix.Tasks.D05.P2 do
 
   @shortdoc "Day 05 Part 2"
   def run(_) do
-    input = nil
+    input = File.read!("lib/inputs/day05.txt")
 
     input
-    |> part2() 
+    |> part2()
     |> IO.inspect(label: "Part 2 Results") 
   end
 end   
