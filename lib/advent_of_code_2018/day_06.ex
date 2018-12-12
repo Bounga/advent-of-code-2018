@@ -103,7 +103,7 @@ defmodule AdventOfCode2018.Day06 do
     largest =
       closest
       |> Enum.group_by(&elem(&1, 1))
-      |> Enum.reject(fn({k, _}) -> k in infinites end)
+      |> Enum.reject(fn {k, _} -> k in infinites end)
       |> Enum.max_by(&Enum.count(elem(&1, 1)))
 
     Enum.count(elem(largest, 1))
@@ -124,6 +124,29 @@ defmodule AdventOfCode2018.Day06 do
     abs(x1 - x2) + abs(y1 - y2)
   end
 
-  def part2(args) do
+  def part2(input, max_distance) do
+    input
+    |> String.split("\n", trim: true)
+    |> Enum.map(&parse_coordinate/1)
+    |> biggest_authorized_area(max_distance)
+  end
+
+  defp biggest_authorized_area(coordinates, max_distance) do
+    {x_range, y_range} = bounding_box(coordinates)
+
+    points =
+      for x <- x_range,
+          y <- y_range,
+          do: {x, y}
+
+    Enum.reduce(points, 0, fn point, count ->
+      if sum_distances(coordinates, point) < max_distance, do: count + 1, else: count
+    end)
+  end
+
+  defp sum_distances(coordinates, point) do
+    coordinates
+    |> Enum.map(&manhattan_distance(&1, point))
+    |> Enum.sum()
   end
 end

@@ -18,11 +18,18 @@ defmodule AdventOfCode2018.Day06Test do
     assert result == 17
   end
 
-  @tag :skip
   test "part2" do
-    input = nil 
-    result = part2(input)
+    max_distance = 32
+    input = """
+    1, 1
+    1, 6
+    8, 3
+    3, 4
+    5, 5
+    8, 9
+    """
+    result = part2(input, max_distance)
 
-    assert result
+    assert result == 16
   end
 end
